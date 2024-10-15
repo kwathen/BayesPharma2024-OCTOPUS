@@ -1,0 +1,20 @@
+#Bayesian example model
+
+model 
+{
+    # N observations
+    for( i in 1:nQtyPats ) 
+    {
+        
+        vY[i] ~ dnorm( vMean[ i ], dTau )
+        vMean[ i ] 	<- dBeta0 + vTreatment[ i ]*dBeta1
+    }
+  
+  
+    # Priors
+    dBeta0   ~ dnorm( dBeta0PriorMean, 1/( dBeta0PriorSD*dBeta0PriorSD ) )
+    dBeta1   ~ dnorm( dBeta1PriorMean, 1/( dBeta1PriorSD*dBeta1PriorSD )  )
+    dTau      ~ dgamma( 0.001, 0.001 )
+    
+}
+
