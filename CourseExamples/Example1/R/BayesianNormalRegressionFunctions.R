@@ -51,7 +51,7 @@ InitsNormalModel <- function( cAnalysis )
     
     dBeta0   <-  rnorm( 1, cAnalysis$dBeta0PriorMean, cAnalysis$dBeta0PriorSD )
     dBeta1   <-  rnorm( 1, cAnalysis$dBeta1PriorMean, cAnalysis$dBeta1PriorSD )
-    dTau     <-  rgamma( 1,  0.001, 0.001 )
+    dTau     <-  runif(1, 0.0001, 5 )
     
-    return( list( dBeta0 = dBeta0, dBeta1 = dBeta1 ) )
+    return( list( dBeta0 = dBeta0, dBeta1 = dBeta1, dTau = dTau ) )
 }
