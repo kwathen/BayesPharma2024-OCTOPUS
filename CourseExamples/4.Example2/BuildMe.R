@@ -53,8 +53,8 @@ nQtyReps           <- 1 # How many replications to simulate each scenario
 dMAV               <- 0
 vPUpper            <- c( 1.0 ) 
 vPLower            <- c( 0.0 ) 
-dFinalPUpper       <- 0.99    
-dFinalPLower       <- 0.01
+dFinalPUpper       <- 0.975    
+dFinalPLower       <- 0.05
 
 # lAnalysis is a list of list.   lAnalysis must have one element for each ISA.  Each ISA list can contain additional parameters for the analysis
 lCommonPrior <- list(  dBeta0PriorMean = 0, dBeta0PriorSD = 100, dBeta1PriorMean = 0, dBeta1PriorSD = 100 )
@@ -97,77 +97,162 @@ cSimulation  <- SetupSimulations( cTrialDesign,
                                   nDesign                   = 1,
                                   dfScenarios               = dfScenarios )
 
+nQtyDesigns    <- 1  # This is an increment that will be used to keep track of designs as they are added
+
+
+lTrialDesigns <- list( cTrialDesign1 = cTrialDesign )
 #Save the design file because we will need it in the RMarkdown file for processing simulation results
 save( cTrialDesign, file="cTrialDesign.RData" )
 
-# Additional Designs ####
+# Design 2  Borrow control data but don't account for ISA effect ####
 
-# If you do not want to add additional designs begin commenting out or deleting this section of code
-# Beginning of multiple design options - This code block could be removed.  It provides an example of
-# how to add additional designs such as sample sizes, adding interim analysis or changing analysis methods.  This approach allow the
-# graphs to display design options side-by-side.
-
-# Design Option 2 ####
-# Example 1 (Design Option 2): Additional Sample Size (more designs )
-# Try another sample size double the original - To show the value of a larger sample size.
-
-cTrialDesign2 <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegression",
-                                   strBorrowing       = "AllControls",
-                                   mPatientsPerArm    = mQtyPatientsPerArm,
-                                   dQtyMonthsFU       = dQtyMonthsFU,
-                                   dMAV               = dMAV,
-                                   vPUpper            = vPUpper,
-                                   vPLower            = vPLower,
-                                   dFinalPUpper       = dFinalPUpper,
-                                   dFinalPLower       = dFinalPLower,
-                                   dTimeOfOutcome     = dTimeOfOutcome,
-                                   lAnalysis          = lAnalysis )
+nQtyDesigns     <- nQtyDesigns + 1
+cTrialDesignTmp <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegression",
+                                     strBorrowing       = "AllControls",
+                                     mPatientsPerArm    = mQtyPatientsPerArm,
+                                     dQtyMonthsFU       = dQtyMonthsFU,
+                                     dMAV               = dMAV,
+                                     vPUpper            = vPUpper,
+                                     vPLower            = vPLower,
+                                     dFinalPUpper       = dFinalPUpper,
+                                     dFinalPLower       = dFinalPLower,
+                                     dTimeOfOutcome     = dTimeOfOutcome,
+                                     lAnalysis          = lAnalysis )
 
 
-cSimulation2 <- SetupSimulations( cTrialDesign2,
-                                  nQtyReps                  = nQtyReps,
-                                  strSimPatientOutcomeClass = "Normal",
-                                  vISAStartTimes            = vISAStartTimes,
-                                  vQtyOfPatsPerMonth        = vQtyOfPatsPerMonth,
-                                  nDesign                   = 2,
-                                  dfScenarios               = dfScenarios)
+cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
+                                    nQtyReps                  = nQtyReps,
+                                    strSimPatientOutcomeClass = "Normal",
+                                    vISAStartTimes            = vISAStartTimes,
+                                    vQtyOfPatsPerMonth        = vQtyOfPatsPerMonth,
+                                    nDesign                   = nQtyDesigns,
+                                    dfScenarios               = dfScenarios)
 
-cSimulation$SimDesigns[[2]] <- cSimulation2$SimDesigns[[1]]
+cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
 
-save( cTrialDesign2, file = "cTrialDesign2.RData" )
+# Save the RData object
+save( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".RData" ) )
 
-# Design Option 3 ####
+# Add design to the list of designs
+lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
+
+# Design 3 Borrow control data and account for ISA effect####
+nQtyDesigns     <- nQtyDesigns + 1
+cTrialDesignTmp <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegressionWithISAEffect",
+                                     strBorrowing       = "AllControls",
+                                     mPatientsPerArm    = mQtyPatientsPerArm,
+                                     dQtyMonthsFU       = dQtyMonthsFU,
+                                     dMAV               = dMAV,
+                                     vPUpper            = vPUpper,
+                                     vPLower            = vPLower,
+                                     dFinalPUpper       = dFinalPUpper,
+                                     dFinalPLower       = dFinalPLower,
+                                     dTimeOfOutcome     = dTimeOfOutcome,
+                                     lAnalysis          = lAnalysisISAEff )
 
 
-cTrialDesign3 <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegressionWithISAEffect",
-                                   strBorrowing       = "AllControls",
-                                   mPatientsPerArm    = mQtyPatientsPerArm,
-                                   dQtyMonthsFU       = dQtyMonthsFU,
-                                   dMAV               = dMAV,
-                                   vPUpper            = vPUpper,
-                                   vPLower            = vPLower,
-                                   dFinalPUpper       = dFinalPUpper,
-                                   dFinalPLower       = dFinalPLower,
-                                   dTimeOfOutcome     = dTimeOfOutcome,
-                                   lAnalysis          = lAnalysisISAEff )
+cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
+                                    nQtyReps                  = nQtyReps,
+                                    strSimPatientOutcomeClass = "Normal",
+                                    vISAStartTimes            = vISAStartTimes,
+                                    vQtyOfPatsPerMonth        = vQtyOfPatsPerMonth,
+                                    nDesign                   = nQtyDesigns,
+                                    dfScenarios               = dfScenarios)
+
+cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
+
+# Save the RData object
+save( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".RData" ) )
+
+# Add design to the list of designs
+lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
 
 
-cSimulation3 <- SetupSimulations( cTrialDesign3,
-                                  nQtyReps                  = nQtyReps,
-                                  strSimPatientOutcomeClass = "Normal",
-                                  vISAStartTimes            = vISAStartTimes,
-                                  vQtyOfPatsPerMonth        = vQtyOfPatsPerMonth,
-                                  nDesign                   = 3,
-                                  dfScenarios               = dfScenarios)
 
-cSimulation$SimDesigns[[3]] <- cSimulation3$SimDesigns[[1]]
 
-save( cTrialDesign3, file = "cTrialDesign3.RData" )
+# Design 4 Include IA, Borrow control data but don't account for ISA effect ####
+
+mMinQtyPats       <- cbind( floor(apply( mQtyPatientsPerArm , 1, sum )/2),  apply( mQtyPatientsPerArm , 1, sum ) )
+vMinFUTime        <- rep( dQtyMonthsFU, ncol( mMinQtyPats) )
+dQtyMonthsBtwIA   <- 0
+
+vPUpper           <- c( 0.99, 0.99 )
+vPLower           <- c( 0.05, 0.05 )
+dFinalPUpper      <- 0.975
+dFinalPLower      <- 0.05
+
+nQtyDesigns     <- nQtyDesigns + 1
+cTrialDesignTmp <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegression",
+                                     strBorrowing       = "AllControls",
+                                     mPatientsPerArm    = mQtyPatientsPerArm,
+                                     mMinQtyPat         = mMinQtyPats,
+                                     vMinFUTime         = vMinFUTime,
+                                     dQtyMonthsBtwIA    = dQtyMonthsBtwIA,
+                                     dMAV               = dMAV,
+                                     vPUpper            = vPUpper,
+                                     vPLower            = vPLower,
+                                     dFinalPUpper       = dFinalPUpper,
+                                     dFinalPLower       = dFinalPLower,
+                                     dTimeOfOutcome     = dTimeOfOutcome,
+                                     lAnalysis          = lAnalysis )
+
+
+cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
+                                    nQtyReps                  = nQtyReps,
+                                    strSimPatientOutcomeClass = "Normal",
+                                    vISAStartTimes            = vISAStartTimes,
+                                    vQtyOfPatsPerMonth        = vQtyOfPatsPerMonth,
+                                    nDesign                   = nQtyDesigns,
+                                    dfScenarios               = dfScenarios)
+
+cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
+
+# Save the RData object
+save( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".RData" ) )
+
+# Add design to the list of designs
+lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
+
+# Design 5 Include IA  Borrow control data and account for ISA effect####
+nQtyDesigns     <- nQtyDesigns + 1
+cTrialDesignTmp <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegressionWithISAEffect",
+                                     strBorrowing       = "AllControls",
+                                     mPatientsPerArm    = mQtyPatientsPerArm,
+                                     mMinQtyPat         = mMinQtyPats,
+                                     vMinFUTime         = vMinFUTime,
+                                     dQtyMonthsBtwIA    = dQtyMonthsBtwIA,
+                                     dMAV               = dMAV,
+                                     vPUpper            = vPUpper,
+                                     vPLower            = vPLower,
+                                     dFinalPUpper       = dFinalPUpper,
+                                     dFinalPLower       = dFinalPLower,
+                                     dTimeOfOutcome     = dTimeOfOutcome,
+                                     lAnalysis          = lAnalysisISAEff )
+
+
+cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
+                                    nQtyReps                  = nQtyReps,
+                                    strSimPatientOutcomeClass = "Normal",
+                                    vISAStartTimes            = vISAStartTimes,
+                                    vQtyOfPatsPerMonth        = vQtyOfPatsPerMonth,
+                                    nDesign                   = nQtyDesigns,
+                                    dfScenarios               = dfScenarios)
+
+cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
+
+# Save the RData object
+save( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".RData" ) )
+
+# Add design to the list of designs
+lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
+
+
+
+
 
 
 #Often it is good to keep the design objects for utilizing in a report
 
-lTrialDesigns <- list( cTrialDesign1 = cTrialDesign, cTrialDesign2 = cTrialDesign2, cTrialDesign3 = cTrialDesign3 )
 save( lTrialDesigns, file="lTrialDesigns.RData")
 
 # End of multiple design options - stop deleting or commenting out here if not utilizing example for multiple designs.
