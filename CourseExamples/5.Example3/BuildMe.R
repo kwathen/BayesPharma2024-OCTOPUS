@@ -71,9 +71,9 @@ dfScenarios <- dfScenarios %>%  dplyr::add_row( Scenario = 1, ISA = 1, MeanCtrl 
                                 dplyr::add_row( Scenario = 2, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
                                 dplyr::add_row( Scenario = 2, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
                                 dplyr::add_row( Scenario = 3, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 3, ISA = 2, MeanCtrl = 5, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>%  
-                                dplyr::add_row( Scenario = 4, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 4, ISA = 2, MeanCtrl = 5, MeanExp = 10, StdCtrl = 10, StdExp = 10 ) 
+                                dplyr::add_row( Scenario = 3, ISA = 2, MeanCtrl = 0, MeanExp = 2,  StdCtrl = 10, StdExp = 10 ) %>% 
+                                dplyr::add_row( Scenario = 4, ISA = 1, MeanCtrl = 0, MeanExp = 2,  StdCtrl = 10, StdExp = 10 ) %>% 
+                                dplyr::add_row( Scenario = 4, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) 
 
 vQtyOfPatsPerMonth <-  c( 5, 10, 15 ) 
 

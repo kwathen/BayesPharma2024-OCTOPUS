@@ -1,4 +1,3 @@
-# This file was created as part of the call to OCTOPUS::CreateProject()
 
 #### Description ################################################################################################
 #   This project was created utilizing the OCTOPUS package located at https://kwathen.github.io/OCTOPUS/ .
@@ -8,14 +7,43 @@
 ################################################################################################### #
 
 ################################################################################################### #
-#   ReadMe -                                                              ####
-#   In this example, we are extending the 3.Example1Borrow to include 
+#   ReadMe - Source the set up files                                                             ####
+#   Rather than have the BuildMe.R create local variables, functions are used to avoid having
+#   local variables. This helps to reduce the chance of a bug due to typos in functions.
+#   The design files create functions that are helpful for setting up the trial design and
+#   simulation design objects but are then removed as they are not needed during the simulations.
+#   See below for the source command on the files that create new functions needed in the simulation.
+#
+#   TrialDesign.R - Contains a function to created the trial design option.
+#       The main function in this file is SetupTrialDesign() which has a few arguments
+#       to allow for options in the set up.  However, for finer control of the trial design see the
+#       function and functions listed in TrialDesignFunctions.R
+#
+#   SimulationDesign.R - Helps to create the simulation design element.  The main function in this
+#       file is SetupSimulations() which allows for some options to be sent in but for better control
+#       and for adding scenarios please see this file.
+#
+#   BuildSimulationResult.R After you run a simulation this file provides an example of how to build
+#   the results and create a basic graph with functions found in PostProcess.R
+#
+#   PostProcess.R - Basic graphing functions.
+#
+#   To add Interim Analysis - see Examples in TrialDesign.R
+#
+#   This file is setup to have 3 design options.  All designs have the same number of ISAs
+#       Design 1 - Utilizes the number of patients that was used to create this file and has no interim analysis
+#       Design 2 - Doubles the number of patients in each ISA
+#       Design 3 - Same as design 1 but includes an interim analysis when half the patients have the desired follow-up
+#
+#   If the files RunAnalysis.XXX.R or SimPatientOutcomes.XXX.R are included they are working example
+#   where the patient outcome is binary and the analysis is a Bayesian model.  You will need to update this per
+#   your use case.
 ################################################################################################### #
 
 # It is a good practice to clear your environment before building your simulation/design object then
 # then clean it again before you run simulations with only the minimum variables need to avoid potential
 # misuse of variables
-# remove( list=ls() )
+remove( list=ls() )
 
 # ReadMe - If needed, install the latest copy of OCTOPUS using the remotes package
 #remotes::install_github( "kwathen/OCTOPUS")
@@ -26,7 +54,7 @@ library( dplyr )
 
 # ReadMe - Useful statements for running on a grid such as linux based grid
 if (interactive() || Sys.getenv("SGE_TASK_ID") == "") {
-  #The SGE_TASK_ID is used if you are running on a linux based grid
+    #The SGE_TASK_ID is used if you are running on a linux based grid
     Sys.setenv(SGE_TASK_ID=1)
 }
 
@@ -34,7 +62,7 @@ source( "R/Functions.R")           # Contains a function to delete any previous 
 #CleanSimulationDirectories( )   # only call when you want to erase previous results
 
 gdConvWeeksToMonths <- 12/52     # Global variable to convert weeks to months, the g is for global as it may be used
-                                 # in functions
+# in functions
 
 
 
@@ -48,7 +76,7 @@ dTimeOfOutcome     <- 1 # The time at which an outcome is observed, in months.
 
 mQtyPatientsPerArm <- matrix( c( 85,85,100,100 ), nrow=2, ncol = 2, byrow=TRUE )
 vISAStartTimes     <- c(  0, 6 )
-nQtyReps           <- 1 # How many replications to simulate each scenario
+nQtyReps           <- 100 # How many replications to simulate each scenario
 
 dMAV               <- 0
 vPUpper            <- c( 1.0 ) 
@@ -67,13 +95,13 @@ lAnalysisISAEff    <- replicate( 2, lCommonPriorISAEff, simplify = FALSE)
 dfScenarios <- data.frame( Scenario =  integer(), ISA  = integer(), MeanCtrl  = double(), MeanExp  = double(), StdCtrl  = double(), StdExp  = double() )
 
 dfScenarios <- dfScenarios %>%  dplyr::add_row( Scenario = 1, ISA = 1, MeanCtrl = 0, MeanExp = 0,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 1, ISA = 2, MeanCtrl = 0, MeanExp = 0,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 2, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 2, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 3, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 3, ISA = 2, MeanCtrl = 5, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>%  
-                                dplyr::add_row( Scenario = 4, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 4, ISA = 2, MeanCtrl = 5, MeanExp = 10, StdCtrl = 10, StdExp = 10 ) 
+    dplyr::add_row( Scenario = 1, ISA = 2, MeanCtrl = 0, MeanExp = 0,  StdCtrl = 10, StdExp = 10 ) %>% 
+    dplyr::add_row( Scenario = 2, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
+    dplyr::add_row( Scenario = 2, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
+    dplyr::add_row( Scenario = 3, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
+    dplyr::add_row( Scenario = 3, ISA = 2, MeanCtrl = 0, MeanExp = 2,  StdCtrl = 10, StdExp = 10 ) %>% 
+    dplyr::add_row( Scenario = 4, ISA = 1, MeanCtrl = 0, MeanExp = 2,  StdCtrl = 10, StdExp = 10 ) %>% 
+    dplyr::add_row( Scenario = 4, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) 
 
 vQtyOfPatsPerMonth <-  c( 5, 10, 15 ) 
 
@@ -102,7 +130,6 @@ nQtyDesigns    <- 1  # This is an increment that will be used to keep track of d
 
 lTrialDesigns <- list( cTrialDesign1 = cTrialDesign )
 #Save the design file because we will need it in the RMarkdown file for processing simulation results
-#save( cTrialDesign, file="cTrialDesign.RData" )
 saveRDS( cTrialDesign, file="cTrialDesign1.Rds" )
 
 # Design 2  Borrow control data but don't account for ISA effect ####
@@ -267,7 +294,7 @@ rm( list=(ls()[ls()!="cSimulation" ]))
 # Declare global variable (prefix with g to make it clear)
 gDebug        <- FALSE   # Can be useful to set if( gDebug ) statements when developing new functions
 gnPrintDetail <- 1       # Higher number cause more printing to be done during the simulation.  A value of 0 prints almost nothing and should be used when running
-                         # large scale simulations.
+# large scale simulations.
 
 # Files specific for this project that were added and are not available in OCTOPUS.
 # These files create new generic functions that are utilized during the simulation.
@@ -277,28 +304,39 @@ source( 'R/SimPatientOutcomes.Normal.R' )  # This will add the new outcome
 source( "R/BayesianNormalRegressionFunctions.R")
 source( "R/BayesianNormalRegressionFunctionsWithISAEffect.R")
 
-# The next line will execute the simulations
-RunSimulation( cSimulation )
 
+#################################################################################################### .
+# Setup of parallel processing                                                                  ####
+#################################################################################################### .
 
+library( "foreach")
+library( "parallel" )
+library( "doParallel" )
+library( "foreach")
+library( "utils" )
+library( "iterators" )
+library( "doSNOW" )
+library( "snow" )
+source( "R/RunParallelSimulations.R" ) # This file has a version of simulations that utilize more cores
 
-# If running on a single instance (computer) you could just increase the nQtyReps above and use code as is up to the RunSimulation() line.
-# However, to "simulate" running this on the grid and getting multiple output files, combining them
-# then creating an R markdown document the following loop could be executed
+# Use 1 less than the number of cores available
+nQtyCores  <- 10# max( detectCores() - 1, 1 )
 
-# vSGETasks <- 2:20  # This will give us 100 reps (20 * 5)
-# for ( nSGETask in vSGETasks )
-# {
-#     gDebug <- FALSE
-#     Sys.setenv(SGE_TASK_ID= nSGETask )
-#     print( paste( "Simulating task ", nSGETask, " of ", length( vSGETasks ), "..."))
-#     RunSimulation( cSimulation )
-# }
+# The nStartIndex and nEndIndex are used to index the simulations and hence the output files see the RunParallelSimulations.R file
+# for more details
+RunParallelSimulations( nStartIndex = 1, nEndIndex = nQtyCores,  nQtyCores, cSimulation )
+
+# The next option will run the parallel simulations but with a visual update on the % complete
+
+# Currently the version with the update box does not update very frequently
+#RunParallelSimulationsWithUpdate( nStartIndex = 1, nEndIndex = nQtyCores,  nQtyCores, cSimulation )
+
 
 # Post Process ####
 # Create .RData sets of the simulation results
-# simsCombined.Rdata - This will have the main results about the platform and decisions made for each ISA
-#
-#OCTOPUS::BuildSimulationResultsDataSet( )
+# simsCombined.Rdata - This will have the all results about the platform and decisions made for each ISA
+# simsISAX.RData will have additional info about ISA X
+# simsMain.RData contain decisions that are made for the platform/ISA
+#dfTmp <- OCTOPUS::BuildSimulationResultsDataSet( )   # Assigning to dfTmp but the important outputs are saved as .RData
 
 
