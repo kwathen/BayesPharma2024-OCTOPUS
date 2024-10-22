@@ -74,9 +74,9 @@ source( "R/TrialDesignFunctions.R")
 dQtyMonthsFU       <- 1
 dTimeOfOutcome     <- 1 # The time at which an outcome is observed, in months.
 
-mQtyPatientsPerArm <- matrix( c( 85,85,100,100 ), nrow=2, ncol = 2, byrow=TRUE )
+mQtyPatientsPerArm <- matrix( c( 100,100 ,100,100 ), nrow=2, ncol = 2, byrow=TRUE )
 vISAStartTimes     <- c(  0, 6 )
-nQtyReps           <- 100 # How many replications to simulate each scenario
+nQtyReps           <- 500 # How many replications to simulate each scenario
 
 dMAV               <- 0
 vPUpper            <- c( 1.0 ) 
@@ -104,6 +104,8 @@ dfScenarios <- dfScenarios %>%  dplyr::add_row( Scenario = 1, ISA = 1, MeanCtrl 
     dplyr::add_row( Scenario = 4, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) 
 
 vQtyOfPatsPerMonth <-  c( 5, 10, 15 ) 
+
+# Design 1 No Borrowing####
 
 cTrialDesign <- SetupTrialDesign( strAnalysisModel   = "BayesNormalRegression",
                                   strBorrowing       = "NoBorrowing",
@@ -310,11 +312,7 @@ source( "R/BayesianNormalRegressionFunctionsWithISAEffect.R")
 library( "foreach")
 library( "parallel" )
 library( "doParallel" )
-library( "foreach")
-library( "utils" )
 library( "iterators" )
-library( "doSNOW" )
-library( "snow" )
 source( "R/RunParallelSimulations.R" ) # This file has a version of simulations that utilize more cores
 
 # Use 1 less than the number of cores available
