@@ -39,11 +39,11 @@ RunAnalysis.BayesNormalRegression <- function( cAnalysis, lDataAna,  nISAAnalysi
     nQtySamplesPerChain <- 2500
     dDelta              <- cAnalysis$dMAV
     
-    lCals      <- SamplePosterior( lData, cAnalysis, nQtySamplesPerChain , dDelta )
+    lPost      <- SamplePosterior( lData, cAnalysis, nQtySamplesPerChain , dDelta )
     
     lCutoff    <- GetBayesianCutoffs( cAnalysis, nISAAnalysisIndx, bIsFinalISAAnalysis )
     
-    lCalcs     <- list( dPrGrtMAV      = lCals$dPrGrtMAV,
+    lCalcs     <- list( dPrGrtMAV      = lPost$dPrGrtMAV,
                         dPUpperCutoff  = lCutoff$dPUpperCutoff,
                         dPLowerCutoff  = lCutoff$dPLowerCutoff )
     

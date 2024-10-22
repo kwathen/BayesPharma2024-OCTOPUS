@@ -130,7 +130,7 @@ nQtyDesigns    <- 1  # This is an increment that will be used to keep track of d
 
 lTrialDesigns <- list( cTrialDesign1 = cTrialDesign )
 #Save the design file because we will need it in the RMarkdown file for processing simulation results
-save( cTrialDesign, file="cTrialDesign.RData" )
+saveRDS( cTrialDesign, file="cTrialDesign1.Rds" )
 
 # Design 2  Borrow control data but don't account for ISA effect ####
 
@@ -159,7 +159,7 @@ cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
 cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
 
 # Save the RData object
-save( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".RData" ) )
+saveRDS( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".Rds" ) )
 
 # Add design to the list of designs
 lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
@@ -190,7 +190,7 @@ cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
 cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
 
 # Save the RData object
-save( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".RData" ) )
+saveRDS( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".Rds" ) )
 
 # Add design to the list of designs
 lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp

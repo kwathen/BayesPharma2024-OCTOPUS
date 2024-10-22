@@ -20,7 +20,7 @@ SamplePosterior<- function( lData, cAnalysis, nQtySamplesPerChain , dDelta )
                     # Priors
                     dBeta0   ~ dnorm( dBeta0PriorMean, 1/( dBeta0PriorSD*dBeta0PriorSD ) )
                     dBeta1   ~ dnorm( dBeta1PriorMean, 1/( dBeta1PriorSD*dBeta1PriorSD )  )
-                    dTau      ~ dgamma( 0.001, 0.001 )
+                    dTau     ~ dgamma( 0.001, 0.001 )
                 }"
 
 

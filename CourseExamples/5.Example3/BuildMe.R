@@ -247,14 +247,8 @@ saveRDS( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".Rds" ) )
 # Add design to the list of designs
 lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
 
-
-
-
-
-
 #Often it is good to keep the design objects for utilizing in a report
-
-save( lTrialDesigns, file="lTrialDesigns.RData")
+saveRDS( lTrialDesigns, file="lTrialDesigns.Rds" )
 
 # End of multiple design options - stop deleting or commenting out here if not utilizing example for multiple designs.
 

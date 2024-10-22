@@ -126,7 +126,7 @@ cSimulation  <- SetupSimulations( cTrialDesign,
                                   dfScenarios               = dfScenarios )
 
 #Save the design file because we will need it in the RMarkdown file for processing simulation results
-save( cTrialDesign, file="cTrialDesign.RData" )
+saveRDS( cTrialDesign, file="cTrialDesign.Rds" )
 
 # Additional Designs ####
 
@@ -162,7 +162,7 @@ cSimulation2 <- SetupSimulations( cTrialDesign2,
 
 cSimulation$SimDesigns[[2]] <- cSimulation2$SimDesigns[[1]]
 
-save( cTrialDesign2, file = "cTrialDesign2.RData" )
+saveRDS( cTrialDesign2, file = "cTrialDesign2.Rds" )
 
 # Design Option 3 ####
 
@@ -190,7 +190,7 @@ cSimulation3 <- SetupSimulations( cTrialDesign3,
 
 cSimulation$SimDesigns[[3]] <- cSimulation3$SimDesigns[[1]]
 
-save( cTrialDesign3, file = "cTrialDesign3.RData" )
+saveRDS( cTrialDesign3, file = "cTrialDesign3.Rds" )
 
 
 #Often it is good to keep the design objects for utilizing in a report

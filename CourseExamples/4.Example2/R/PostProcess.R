@@ -754,14 +754,18 @@ ProcessISAResults <- function( mSims, nISANumber, nTreatmentStartNumber, nQtyTrt
 
     
     mTimeISA           <- mSims[,paste0(c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA") , nISANumber)]
+    #Add the average time to decision in an ISA
+    mTimeISA           <- cbind( mTimeISA[,1:4], mTimeISA[,paste0( "FinalAnalysisTimeISA" , nISANumber)] - mTimeISA[,paste0( "ISAStart" , nISANumber)]  )
+    colnames( mTimeISA )[5] <- paste0( "TimeToDecision", nISANumber )
+    
     vMeanTime          <- apply( mTimeISA, 2, mean  )
     vLowerLimit        <- apply( mTimeISA, 2, quantile, probs=c(0.025) )
     vUpperLimit        <- apply( mTimeISA, 2, quantile, probs=c(0.975) )
     lISAResults$vWhat  <- c( lISAResults$vWhat, c( "Ave N Placebo", "Ave N Treatment", "Ave N ISA",
-                                                    paste0("Ave",c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA") ),
-                                                    paste0("LowerLimit",c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA") ),
-                                                    paste0("UpperLimit",c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA") ) ) )
-    lISAResults$vISA   <- c( lISAResults$vISA,  rep( paste( "ISA", nISANumber),15))
+                                                    paste0("Ave",c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA", "TimeToDecision") ),
+                                                    paste0("LowerLimit",c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA", "TimeToDecision") ),
+                                                    paste0("UpperLimit",c( "ISAStart", "FinalPatientEnrolledTimeISA", "StartIAISA", "FinalAnalysisTimeISA", "TimeToDecision") ) ) )
+    lISAResults$vISA   <- c( lISAResults$vISA,  rep( paste( "ISA", nISANumber),18))
     lISAResults$vValue <- c( lISAResults$vValue, c( dAvePlacISA, dAveTrtISA, dAvePlacISA + dAveTrtISA,
                                                     vMeanTime, vLowerLimit, vUpperLimit ) )
 

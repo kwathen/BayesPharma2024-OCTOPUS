@@ -95,10 +95,8 @@ lAnalysisISAEff    <- replicate( 2, lCommonPriorISAEff, simplify = FALSE)
 
 dfScenarios <- data.frame( Scenario =  integer(), ISA  = integer(), MeanCtrl  = double(), MeanExp  = double(), StdCtrl  = double(), StdExp  = double() )
 
-dfScenarios <- dfScenarios %>%  dplyr::add_row( Scenario = 1, ISA = 1, MeanCtrl = 0, MeanExp = 0,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 1, ISA = 2, MeanCtrl = 0, MeanExp = 0,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 2, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
-                                dplyr::add_row( Scenario = 2, ISA = 2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
+dfScenarios <- dfScenarios %>%  dplyr::add_row( Scenario = 1, ISA = 1:2, MeanCtrl = 0, MeanExp = 0,  StdCtrl = 10, StdExp = 10 ) %>% 
+                                dplyr::add_row( Scenario = 2, ISA = 1:2, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
                                 dplyr::add_row( Scenario = 3, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
                                 dplyr::add_row( Scenario = 3, ISA = 2, MeanCtrl = 5, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>%  
                                 dplyr::add_row( Scenario = 4, ISA = 1, MeanCtrl = 0, MeanExp = 5,  StdCtrl = 10, StdExp = 10 ) %>% 
@@ -127,7 +125,7 @@ cSimulation  <- SetupSimulations( cTrialDesign,
                                   dfScenarios               = dfScenarios )
 
 #Save the design file because we will need it in the RMarkdown file for processing simulation results
-save( cTrialDesign, file="cTrialDesign.RData" )
+saveRDS( cTrialDesign, file="cTrialDesign1.Rds" )
 
 # Additional Designs ####
 
@@ -163,7 +161,7 @@ cSimulation2 <- SetupSimulations( cTrialDesign2,
 
 cSimulation$SimDesigns[[2]] <- cSimulation2$SimDesigns[[1]]
 
-save( cTrialDesign2, file = "cTrialDesign2.RData" )
+saveRDS( cTrialDesign2, file = "cTrialDesign2.Rds" )
 
 # Design Option 3 ####
 
@@ -191,7 +189,7 @@ cSimulation3 <- SetupSimulations( cTrialDesign3,
 
 cSimulation$SimDesigns[[3]] <- cSimulation3$SimDesigns[[1]]
 
-save( cTrialDesign3, file = "cTrialDesign3.RData" )
+saveRDS( cTrialDesign3, file = "cTrialDesign3.Rds" )
 
 
 #Often it is good to keep the design objects for utilizing in a report
@@ -237,11 +235,4 @@ RunSimulation( cSimulation )
 #     print( paste( "Simulating task ", nSGETask, " of ", length( vSGETasks ), "..."))
 #     RunSimulation( cSimulation )
 # }
-
-# Post Process ####
-# Create .RData sets of the simulation results
-# simsCombined.Rdata - This will have the main results about the platform and decisions made for each ISA
-#
-#OCTOPUS::BuildSimulationResultsDataSet( )
-
 

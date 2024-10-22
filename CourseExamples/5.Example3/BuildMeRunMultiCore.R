@@ -158,11 +158,13 @@ cSimulationTmp <- SetupSimulations( cTrialDesignTmp,
 
 cSimulation$SimDesigns[[ nQtyDesigns ]] <- cSimulationTmp$SimDesigns[[1]]
 
-# Save the RData object
+# Save the Rds object
 saveRDS( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".Rds" ) )
 
 # Add design to the list of designs
 lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
+
+saveRDS( cTrialDesign, file="cTrialDesign1.Rds" )
 
 # Design 3 Borrow control data and account for ISA effect####
 nQtyDesigns     <- nQtyDesigns + 1
@@ -196,6 +198,7 @@ saveRDS( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".Rds" ) )
 lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
 
 
+saveRDS( cTrialDesign, file="cTrialDesign1.Rds" )
 
 
 # Design 4 Include IA, Borrow control data but don't account for ISA effect ####
@@ -275,13 +278,8 @@ saveRDS( cTrialDesignTmp, file = paste0("cTrialDesign", nQtyDesigns, ".Rds" ) )
 lTrialDesigns[[ paste0( "cTrialDesign", nQtyDesigns )]] <- cTrialDesignTmp
 
 
-
-
-
-
 #Often it is good to keep the design objects for utilizing in a report
-
-save( lTrialDesigns, file="lTrialDesigns.RData")
+saveRDS( lTrialDesigns, file="lTrialDesigns.Rds")
 
 # End of multiple design options - stop deleting or commenting out here if not utilizing example for multiple designs.
 
