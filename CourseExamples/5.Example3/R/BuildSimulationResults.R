@@ -23,6 +23,8 @@ dEnd           <- ymd( "2027/06/01")
 vUniqueDesigns <- unique( dfResSub$design )
 
 
+TimeLinePlot(dfResSub, dStart,dEnd, vDesigns = vUniqueDesigns[3], strTitle = "Design 3, Scenario 2", nScenario = 2 )
+TimeLinePlot(dfResSub, dStart,dEnd, vDesigns = vUniqueDesigns[5], strTitle = "Design 5, Scenario 2", nScenario = 2 )
 TimeLinePlot(dfResSub, dStart,dEnd, vDesigns = vUniqueDesigns[5], strTitle = "Design 5, Scenario 3", nScenario = 3 )
 TimeLinePlot(dfResSub, dStart,dEnd, vDesigns = vUniqueDesigns[5], strTitle = "Design 5, Scenario 4", nScenario = 4 )
 
