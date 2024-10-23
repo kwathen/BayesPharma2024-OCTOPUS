@@ -74,9 +74,9 @@ source( "R/TrialDesignFunctions.R")
 dQtyMonthsFU       <- 1
 dTimeOfOutcome     <- 1 # The time at which an outcome is observed, in months.
 
-mQtyPatientsPerArm <- matrix( c( 85,85,100,100 ), nrow=2, ncol = 2, byrow=TRUE )
+mQtyPatientsPerArm <- matrix( c( 100,100,100,100 ), nrow=2, ncol = 2, byrow=TRUE )
 vISAStartTimes     <- c(  0, 6 )
-nQtyReps           <- 100 # How many replications to simulate each scenario
+nQtyReps           <- 500 # How many replications to simulate each scenario
 
 dMAV               <- 0
 vPUpper            <- c( 1.0 ) 

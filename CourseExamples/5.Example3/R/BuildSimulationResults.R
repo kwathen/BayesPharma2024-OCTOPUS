@@ -1,6 +1,6 @@
 # This file will process the simulation results and create several .RData files containing ISA results and the trial results
 
-
+library( ggplot2 )
 library( OCTOPUS )
 source( "R/PostProcess.R")
 
